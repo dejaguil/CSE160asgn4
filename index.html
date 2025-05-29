@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phong Cube</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+
+    /* Common UI style */
+    .ui {
+      position: absolute;
+      z-index: 1;
+      background: rgba(34, 34, 34, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-family: sans-serif;
+    }
+
+    #toggleButtonContainer {
+      top: 10px;
+      left: 10px;
+    }
+
+    #xSliderContainer {
+      top: 60px;
+      left: 10px;
+    }
+
+    #zSliderContainer {
+      top: 130px;
+      left: 10px;
+    }
+
+    #lightColorContainer {
+      top: 200px;
+      left: 10px;
+    }
+
+    #lightingToggleContainer {
+      top: 380px;
+      left: 10px;
+    }
+
+    #intensitySliderContainer {
+      top: 440px;
+      left: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="webgl" width="800" height="600"></canvas>
+
+  <!-- Toggle Normals Button -->
+  <div id="toggleButtonContainer" class="ui">
+    <button id="toggleButton" onclick="toggleNormals()">Toggle Normals</button>
+  </div>
+
+  <!-- Light X Offset -->
+  <div id="xSliderContainer" class="ui">
+    <label for="xSlider">Light X Offset</label>
+    <input type="range" id="xSlider" min="-3" max="3" step="0.1" value="0">
+  </div>
+
+  <!-- Light Z Offset -->
+  <div id="zSliderContainer" class="ui">
+    <label for="zSlider">Light Z Offset</label>
+    <input type="range" id="zSlider" min="-3" max="3" step="0.1" value="0">
+  </div>
+
+  <!-- Light Color Sliders -->
+  <div id="lightColorContainer" class="ui">
+    <label>Light Color</label>
+    <label for="rSlider">Red</label>
+    <input type="range" id="rSlider" min="0" max="1" step="0.01" value="1">
+    <label for="gSlider">Green</label>
+    <input type="range" id="gSlider" min="0" max="1" step="0.01" value="1">
+    <label for="bSlider">Blue</label>
+    <input type="range" id="bSlider" min="0" max="1" step="0.01" value="1">
+  </div>
+
+  <!-- Toggle Lighting Button -->
+  <div id="lightingToggleContainer" class="ui">
+    <button id="lightingToggleButton">Toggle Lighting</button>
+  </div>
+
+  <!-- Light Intensity -->
+  <div id="intensitySliderContainer" class="ui">
+    <label for="lightColorSlider">Light Intensity</label>
+    <input type="range" id="lightColorSlider" min="0" max="1" step="0.01" value="1">
+  </div>
+
+  <!-- Libraries -->
+  <script src="lib/cuon-matrix.js"></script>
+  <script src="lib/cuon-utils.js"></script>
+  <script src="OBJLoader.js"></script>
+  <!-- Scene Code -->
+  <script src="lighting.js"></script>
+
+
+</body>
+</html>
