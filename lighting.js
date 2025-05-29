@@ -30,7 +30,7 @@ document.getElementById("lightingToggleButton").addEventListener("click", () => 
 });
 
 
-// ===== Camera Class =====
+
 class Camera {
   constructor(position = [0, 1, 2], target = [0, 0, 0]) {
     this.position = new Vector3(position);
@@ -87,7 +87,7 @@ class Camera {
 }
 }
 
-// ===== RotateControls Class =====
+
 class RotateControls {
   constructor(gl, camera) {
     this.canvas = gl.canvas;
@@ -146,7 +146,7 @@ class RotateControls {
     this.camera.position.elements.set([cx, cy, cz]);
     this.camera.calculateViewProjection();
 
-    // Movement update (WASD)
+ 
     const moveSpeed = 0.05;
     if (this.keys["w"]) this.camera.move(moveSpeed, 0);
     if (this.keys["s"]) this.camera.move(-moveSpeed, 0);
@@ -242,7 +242,7 @@ void main() {
   vec3 specular = spotlightFactor * 0.4 * spec * uLightColor;
 
 
-  vec3 baseColor = vec3(1.0); // hardcoded base
+  vec3 baseColor = vec3(1.0); 
   vec3 result = (ambient + diffuse + specular) * baseColor;
   gl_FragColor = vec4(result, 1.0);
 }
@@ -318,7 +318,7 @@ const cubeNormals = new Float32Array([
   0, -1, 0, 0, -1, 0, 0, -1, 0,
   0, -1, 0, 0, -1, 0, 0, -1, 0,
 ]);
-// === Cube buffers ===
+
 const vertexBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, cubeVerts, gl.STATIC_DRAW);
@@ -329,7 +329,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, cubeNormals, gl.STATIC_DRAW);
 const aNormal = gl.getAttribLocation(program, "aNormal");
 
-// === Sphere buffers ===
+
 const sphereData = createSphere();
 const sphereVBO = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, sphereVBO);
@@ -343,7 +343,7 @@ const sphereIBO = gl.createBuffer();
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereIBO);
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sphereData.indices, gl.STATIC_DRAW);
 
-  // === Init camera + controls ===
+  
   const camera = new Camera();
   const controls = new RotateControls(gl, camera);
 
@@ -370,7 +370,7 @@ function createSphere(radius = 0.5, latBands = 30, longBands = 30) {
       const z = sinPhi * sinTheta;
 
       verts.push(radius * x, radius * y, radius * z);
-      norms.push(x, y, z); // Normal = position for a unit sphere
+      norms.push(x, y, z); 
     }
   }
 
@@ -397,28 +397,28 @@ function createSphere(radius = 0.5, latBands = 30, longBands = 30) {
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // === Lighting toggle and color ===
+
   const lightingState = lightingOn ? 1 : 0;
   const scaledColor = lightColor.map(c => c * lightIntensity);
   gl.uniform1i(gl.getUniformLocation(program, "uLightingOn"), lightingState);
   gl.uniform3fv(gl.getUniformLocation(program, "uLightColor"), scaledColor);
 
-  // === Update camera ===
+ 
   controls.update();
 
-  // === Animate light position ===
+ 
   const lightX = Math.cos(lightAngle) * 2 + userLightOffsetX;
   const lightZ = Math.sin(lightAngle) * 2 + userLightOffsetZ;
   const lightY = 2;
   lightAngle += 0.02;
   lightPos.elements = [lightX, lightY, lightZ];
 
-  // === Light transform ===
+ 
   const lightPosWorld = new Vector4([lightX, lightY, lightZ, 1.0]);
   const lightPosEye = camera.viewMatrix.multiplyVector4(lightPosWorld);
   const lightPosEyeVec3 = lightPosEye.elements.slice(0, 3);
 
-  // === Global uniforms ===
+
   gl.uniform1i(gl.getUniformLocation(program, "uVisualizeNormals"), visualizeNormals);
   gl.uniform3fv(gl.getUniformLocation(program, "uLightPos"), lightPosEyeVec3);
   gl.uniform3fv(gl.getUniformLocation(program, "uViewPos"), camera.position.elements);
@@ -427,14 +427,14 @@ function render() {
 gl.uniform3fv(gl.getUniformLocation(program, "uSpotlightDir"), spotlightDir.elements);
 gl.uniform1f(gl.getUniformLocation(program, "uSpotlightCutoff"), spotlightCutoff);
 
-  // === Rotate Cube ===
+ 
   modelRotation += 0.5;
   const cubeModel = new Matrix4().rotate(modelRotation, 0, 1, 0);
   const cubeNormal = new Matrix4().setInverseOf(cubeModel).transpose();
   gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelMatrix"), false, cubeModel.elements);
   gl.uniformMatrix4fv(gl.getUniformLocation(program, "normalMatrix"), false, cubeNormal.elements);
 
-  // === Draw Cube ===
+ 
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
   gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(aPosition);
@@ -443,7 +443,7 @@ gl.uniform1f(gl.getUniformLocation(program, "uSpotlightCutoff"), spotlightCutoff
   gl.enableVertexAttribArray(aNormal);
   gl.drawArrays(gl.TRIANGLES, 0, cubeVerts.length / 3);
 
-  // === Draw Sphere ===
+
   const sphereModel = new Matrix4().translate(1.5, 0, 0);
   const sphereNormal = new Matrix4().setInverseOf(sphereModel).transpose();
   gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelMatrix"), false, sphereModel.elements);
@@ -457,7 +457,7 @@ gl.uniform1f(gl.getUniformLocation(program, "uSpotlightCutoff"), spotlightCutoff
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereIBO);
   gl.drawElements(gl.TRIANGLES, sphereData.indices.length, gl.UNSIGNED_SHORT, 0);
 
-  // === Draw Light Cube (no lighting on itself) ===
+  
   const lightCubeMatrix = new Matrix4().translate(...lightPos.elements).scale(0.8, 0.8, 0.8);
   const lightNormalMatrix = new Matrix4().setInverseOf(lightCubeMatrix).transpose();
   gl.uniformMatrix4fv(gl.getUniformLocation(program, "modelMatrix"), false, lightCubeMatrix.elements);
@@ -467,12 +467,12 @@ gl.uniform1f(gl.getUniformLocation(program, "uSpotlightCutoff"), spotlightCutoff
   gl.enableVertexAttribArray(aPosition);
   gl.uniform1i(gl.getUniformLocation(program, "uLightingOn"), 0);
   gl.drawArrays(gl.TRIANGLES, 0, lightCubeVerts.length / 3);
-  gl.uniform1i(gl.getUniformLocation(program, "uLightingOn"), lightingState); // Restore toggle state
+  gl.uniform1i(gl.getUniformLocation(program, "uLightingOn"), lightingState); 
 
   requestAnimationFrame(render);
 }
 
-// Init and start rendering
+
 gl.clearColor(0.1, 0.1, 0.1, 1.0);
 gl.enable(gl.DEPTH_TEST);
 render();
